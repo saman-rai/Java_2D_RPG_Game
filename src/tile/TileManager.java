@@ -9,11 +9,13 @@ import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
 
 import main.GamePanel;
+import main.UtilityTool;
 
 public class TileManager {
 	GamePanel gp;
 	public Tile[] tile;
 	public int mapTileNum[][];
+	
 	public TileManager(GamePanel gp) {
 		this.gp = gp;
 		tile = new Tile[10];
@@ -24,28 +26,26 @@ public class TileManager {
 		loadMap("/maps/world01.txt");
 	}
 	public void getTileImage() {
+	
+			setup(0,"grass",false);
+			setup(1,"wall",true);
+			setup(2,"water",true);
+			setup(3,"earth",false);
+			setup(4,"tree",true);
+			setup(5,"sand",false);
+			
+		
+	}
+	public void setup(int index, String imgName, boolean collision) {
+		UtilityTool uTool = new UtilityTool();
 		try {
-			tile[0]=new Tile();
-			tile[0].image = ImageIO.read(getClass().getResourceAsStream("/tile/grass.png"));
+			tile[index] = new Tile();
+			tile[index].image = ImageIO.read(getClass().getResourceAsStream("/tile/"+imgName+".png"));
+			tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
+			tile[index].collision = collision;
 			
-			tile[1]=new Tile();
-			tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tile/wall.png"));
-			tile[1].collision = true;
-			
-			tile[2]=new Tile();
-			tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tile/water.png"));
-			tile[2].collision = true;
-			
-			tile[3]=new Tile();
-			tile[3].image = ImageIO.read(getClass().getResourceAsStream("/tile/earth.png"));
-			
-			tile[4]=new Tile();
-			tile[4].image = ImageIO.read(getClass().getResourceAsStream("/tile/tree.png"));
-			tile[4].collision = true;
-			
-			tile[5]=new Tile();
-			tile[5].image = ImageIO.read(getClass().getResourceAsStream("/tile/sand.png"));
-		}catch(IOException e){
+		}
+		catch(IOException e){
 			e.printStackTrace();
 		}
 	}
@@ -70,18 +70,6 @@ public class TileManager {
 		
 	}
 	public void draw(Graphics2D g2) {
-//		int col = 0,row =0, x=0, y=0;
-//		while (col<gp.maxScreenCol && row < gp.maxScreenRow) {
-//			g2.drawImage(tile[0].image, x, y, gp.tileSize, gp.tileSize, null);
-//			col++;
-//			x+=gp.tileSize;
-//			if(col==gp.maxScreenCol) {
-//				col=0;
-//				x=0;
-//				row++;
-//				y+=gp.tileSize;
-//			}
-//		}
 		for(int worldRow=0; worldRow<gp.maxWorldRow;worldRow++) {			
 			for(int worldCol=0; worldCol<gp.maxWorldCol;worldCol++) {
 				int tileNum = mapTileNum[worldCol][worldRow];
@@ -91,7 +79,9 @@ public class TileManager {
 				int screenX = worldX - gp.player.worldX + gp.player.screenX;
 				int screenY = worldY - gp.player.worldY + gp.player.screenY;
 				if(screenX>=(gp.tileSize*-1)&&screenX<gp.screenWidth&&screenY>=(gp.tileSize*-1)&&screenY<gp.screenHeight) { // optimizing for only drawing visible tiles
-					g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+					
+						g2.drawImage(tile[tileNum].image, screenX, screenY, null);
+				
 				}
 			}
 		}
