@@ -33,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable{
 //	Tile maanger
 	TileManager tileM = new TileManager(this);
 //	keyhandler
-	KeyHandler keyH = new KeyHandler();
+	KeyHandler keyH = new KeyHandler(this);
 
 	Sound bgMusic = new Sound();
 	Sound soundSE = new Sound();
@@ -55,6 +55,13 @@ public class GamePanel extends JPanel implements Runnable{
 	int playerSpeed = 4;
 	
 	public SuperObject obj[]= new SuperObject[10];
+	
+	
+//	gamestate
+	public int gameState;
+	public final int playState = 1;
+	public final int pauseState = 2;
+	
 //	constructor
 	public GamePanel(){
 		this.setPreferredSize(new Dimension(screenWidth,screenHeight));
@@ -67,50 +74,13 @@ public class GamePanel extends JPanel implements Runnable{
 	public void setupGame() {
 		aSetter.setObject();
 		playMusic(0);
+		gameState = playState;
 	}
 	public void startGameThread() {
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
-// gameloop called by thread
-	
-/*
-	@Override
-	public void run() {
-//		FPS control
-//		method 1: sleep method
-		double drawInterval = 1000000000/fps; //0.01666 seconds
-		double nextDrawTime = System.nanoTime()+drawInterval;
-		
-		while(gameThread!=null) {
-//			System.out.println("running...");
-			
-//			long currentTime = System.nanoTime();
-			
 
-//			1. Update : update info such as character positon
-			update();
-//			2. Draw : draw the screen with updated information
-			repaint();
-			
-			try {
-				double remainingTime = nextDrawTime - System.nanoTime();
-				remainingTime = remainingTime/1000000; //converting to milisecs
-				
-				if(remainingTime<0) {
-					
-					remainingTime=0;
-				}
-				Thread.sleep((long)remainingTime); //sleep only takes long milisecs
-				nextDrawTime += drawInterval;
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-*/
-	
 	
 //	fps delta/accumulator method
 	public void run() {
@@ -145,19 +115,13 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 	}
 	public void update() {
-		player.update();
-//		if(keyH.upPressed==true) {
-//			playerY-=playerSpeed;
-//		}
-//		else if(keyH.downPressed==true) {
-//			playerY+=playerSpeed;
-//		}
-//		else if(keyH.leftPressed==true) {
-//			playerX-=playerSpeed;
-//		}
-//		else if(keyH.rightPressed==true) {
-//			playerX+=playerSpeed;
-//		}
+		if(gameState == playState) {
+			
+			player.update();
+		}
+		else if(gameState == pauseState) {
+//			somthing
+		}
 	}
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

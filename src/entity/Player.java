@@ -18,7 +18,6 @@ public class Player extends Entity {
 	KeyHandler keyH;
 	
 	public final int screenX, screenY;
-	public int hasKey = 0;
 	
 	int standCounter = 0;
 	
@@ -130,41 +129,6 @@ public class Player extends Entity {
 		
 	}
 	public void pickUpObj(int objIndex) {
-//		gp.obj[objIndex] = null; simple
-		
-		String objName = gp.obj[objIndex].name;
-		
-		switch(objName) {
-		case "Key":
-			gp.playSE(1);
-			hasKey++;
-			gp.obj[objIndex]=null;
-			gp.ui.showMessage("you got a key");
-			break;
-		case "Door":
-			if(hasKey>0) {
-				gp.playSE(3);
-				gp.obj[objIndex]=null;
-				hasKey--;
-				gp.ui.showMessage("you opened a door");
-			}else {
-				
-				gp.ui.showMessage("door locked");
-			}
-			break;
-		case "Boots":
-			gp.playSE(2);
-			speed+=4;
-			gp.obj[objIndex]=null;
-			gp.ui.showMessage("speed boosted");
-			break;
-			
-		case "Chest":
-			gp.ui.gameFinished = true;
-			gp.stopMusic();
-			gp.playSE(4);
-			break;
-		}
 		
 	}
 	public void draw(Graphics2D g2) {
