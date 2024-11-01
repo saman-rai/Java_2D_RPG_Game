@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import entity.Entity;
 import entity.Player;
 import object.SuperObject;
 import tile.TileManager;
@@ -55,6 +56,7 @@ public class GamePanel extends JPanel implements Runnable{
 	int playerSpeed = 4;
 	
 	public SuperObject obj[]= new SuperObject[10];
+	public Entity npc[]= new Entity[10];
 	
 	
 //	gamestate
@@ -73,6 +75,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	public void setupGame() {
 		aSetter.setObject();
+		aSetter.setNPC();
 		playMusic(0);
 		gameState = playState;
 	}
@@ -118,6 +121,11 @@ public class GamePanel extends JPanel implements Runnable{
 		if(gameState == playState) {
 			
 			player.update();
+//			npc
+			for(int i =0; i<npc.length;i++) {
+				if(npc[i]==null) continue;
+				npc[i].update();
+			}
 		}
 		else if(gameState == pauseState) {
 //			somthing
@@ -135,11 +143,18 @@ public class GamePanel extends JPanel implements Runnable{
 			drawStart = System.nanoTime();
 		}
 		
-		
+//		object
 		for(int i = 0; i < obj.length; i++) {
 			if(obj[i]==null) continue;
 			obj[i].draw(g2, this);
 		}
+		
+//		npc
+		for(int i = 0; i<npc.length;i++) {
+			if(npc[i]==null) continue;
+			npc[i].draw(g2);
+		}
+		
 		player.draw(g2);
 //		g2.setColor(Color.white);
 //		g2.fillRect(playerX, playerY, tileSize, tileSize);

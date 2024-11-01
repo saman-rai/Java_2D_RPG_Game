@@ -14,7 +14,6 @@ import main.UtilityTool;
 
 public class Player extends Entity {
 
-	GamePanel gp;
 	KeyHandler keyH;
 	
 	public final int screenX, screenY;
@@ -22,7 +21,7 @@ public class Player extends Entity {
 	int standCounter = 0;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
-		this.gp = gp;
+		super(gp);
 		this.keyH = keyH;
 		
 		screenX = gp.screenWidth/2-(gp.tileSize/2); // 760/2-(48/2) = 356
@@ -49,28 +48,16 @@ public class Player extends Entity {
 	
 	public void getPlayerImage() {
 		
-		up1 = setup("boy_up_1");
-		up2 = setup("boy_up_2");
-		down1 = setup("boy_down_1");
-		down2 = setup("boy_down_2");
-		left1 = setup("boy_left_1");
-		left2 = setup("boy_left_2");
-		right1 = setup("boy_right_1");
-		right2 = setup("boy_right_2");
+		up1 = setup("/player/boy_up_1");
+		up2 = setup("/player/boy_up_2");
+		down1 = setup("/player/boy_down_1");
+		down2 = setup("/player/boy_down_2");
+		left1 = setup("/player/boy_left_1");
+		left2 = setup("/player/boy_left_2");
+		right1 = setup("/player/boy_right_1");
+		right2 = setup("/player/boy_right_2");
 	}
-	public BufferedImage setup(String imageName) {
-		BufferedImage scaleImg = null;
-		UtilityTool uTool = new UtilityTool();
-		
-		try {
-			BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/player/"+imageName+".png"));
-			scaleImg = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
-		}
-		catch(IOException e) {
-			e.printStackTrace();
-		}
-		return scaleImg;
-	}
+	
 	public void update() {
 		
 		if(keyH.upPressed==true||keyH.downPressed==true||keyH.leftPressed==true||keyH.rightPressed==true) {
@@ -99,7 +86,11 @@ public class Player extends Entity {
 			int objIndex = gp.cChecker.checkObject(this, true);
 			if(objIndex!=-1) pickUpObj(objIndex);
 			
-			//
+			
+//			NPC Collision check
+			int npcIndex =gp.cChecker.checkEntity(this, gp.npc);
+			interactNPC(npcIndex);
+			// collisionOn false player can move
 			if(collisionOn == false) {
 				switch(direction) {
 				case "up": worldY-=speed; break;
@@ -130,6 +121,10 @@ public class Player extends Entity {
 	}
 	public void pickUpObj(int objIndex) {
 		
+	}
+	public void interactNPC(int index) {
+		if(index == -1) return;
+		System.out.println("hitting npc");
 	}
 	public void draw(Graphics2D g2) {
 //		g2.setColor(Color.white);
